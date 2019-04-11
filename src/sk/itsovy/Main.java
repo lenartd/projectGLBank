@@ -6,15 +6,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.awt.*;
-
 
 public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("loginForm.fxml"));
-        primaryStage.setTitle("GL Bank  Please Log in");
+        Parent root = FXMLLoader.load(getClass().getResource("UserInterface/loginForm.fxml"));
+        primaryStage.setTitle("GL Bank  Managagement");
         primaryStage.setScene(new Scene(root, 380, 330));
         primaryStage.setResizable(false);
         primaryStage.show();

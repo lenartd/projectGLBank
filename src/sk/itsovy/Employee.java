@@ -4,15 +4,15 @@ public class Employee {
 
     private String firstName;
     private String lastName;
-    private int position;
-    private int id;
+    private String position;
+    //private int id;
 
-    public Employee(String firstName, String lastName, int position, int id)
+    public Employee(String firstName, String lastName, String position)
     {
         this.firstName = firstName;
         this.lastName = lastName;
         this.position = position;
-        this.id = id;
+        //this.id = id;
     }
 
     public String getFirstname() {
@@ -23,11 +23,13 @@ public class Employee {
         return lastName;
     }
 
-    public int getPosition() {
+    public String getPosition() {
         return position;
     }
 
+    /*
     public int getId() {
         return id;
     }
+    */
 }
