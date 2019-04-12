@@ -1,17 +1,16 @@
 package sk.itsovy;
 
-public class Employee {
-
+public class Client {
     private String firstName;
     private String lastName;
-    private String position;
+    private String email;
     private int id;
 
-    public Employee(String firstName, String lastName, String position, int id)
+    public Client(String firstName, String lastName, String email, int id)
     {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.position = position;
+        this.email = email;
         this.id = id;
     }
 
@@ -23,9 +22,10 @@ public class Employee {
         return lastName;
     }
 
-    public String getPosition() {
-        return position;
+    public String getEmail() {
+        return email;
     }
 
     public int getId() { return id; }
+
 }

@@ -1,9 +1,11 @@
 package sk.itsovy.Database;
 
+import sk.itsovy.Client;
 import sk.itsovy.Employee;
 import sk.itsovy.Globals;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class Database {
     private static Database db = new Database();
@@ -38,9 +40,7 @@ public class Database {
     {
         try
         {
-            //Connection conn = getConnection();
-
-            PreparedStatement st = conn.prepareStatement(SqlQueries.getLoginInfo);
+            PreparedStatement st = conn.prepareStatement(new SqlQueries().getLoginInfo());
             ResultSet rs = st.executeQuery();
 
             while(rs.next())
@@ -66,18 +66,42 @@ public class Database {
     {
         try
         {
-            //Connection conn = getConnection();
-
-            PreparedStatement st = conn.prepareStatement(SqlQueries.getEmployeeInfo);
+            PreparedStatement st = conn.prepareStatement(new SqlQueries().getEmployeeInfo());
             ResultSet rs = st.executeQuery();
             rs.next();
 
             String fname = rs.getString("fname");
-            String lanme = rs.getString("lname");
+            String lname = rs.getString("lname");
             String position = rs.getString("position");
+            int id = rs.getInt("id");
 
-            Employee emp = new Employee(fname, lanme, position);
+            Employee emp = new Employee(fname, lname, position, id);
+
             return emp;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public ArrayList<Client> getClients()
+    {
+        try
+        {
+            PreparedStatement st = conn.prepareStatement(new SqlQueries().getGetClients());
+            ResultSet rs = st.executeQuery();
+
+            ArrayList <Client> clientList = new ArrayList <>();
+            Client client;
+
+            while(rs.next())
+            {
+                client = new Client(rs.getString("fname"), rs.getString("lname"), rs.getString("email"), rs.getInt("id"));
+                clientList.add(client);
+            }
+            return clientList;
         }
         catch (Exception e)
         {

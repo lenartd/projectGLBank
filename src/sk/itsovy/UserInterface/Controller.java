@@ -25,6 +25,7 @@ public class Controller {
     public void verifyUser(ActionEvent actionEvent)
     {
         Database dbase = Database.getInstanceDB();
+
         user = usernameField.getText();
         if(dbase.matchUser(user, passwordField.getText()))
         {
@@ -36,16 +37,17 @@ public class Controller {
             Parent root;
             try
             {
-                Employee myemp = dbase.getEmployee();
-
+                Employee emp = dbase.getEmployee();
                 root = FXMLLoader.load(getClass().getResource("mainForm.fxml"));
                 Stage stage = new Stage();
-                stage.setTitle("Logged in as: " + myemp.getFirstname() + " " + myemp.getLastname());
+                stage.setTitle("Logged in as: " + emp.getFirstname() + " " + emp.getLastname());
                 stage.setScene(new Scene(root, 820, 500));
                 stage.setResizable(false);
                 stage.show();
 
-                ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
+                //((Node)(actionEvent.getSource())).getScene().getWindow().hide();
+                Stage stage2 = (Stage) errorlabel.getScene().getWindow();
+                stage2.close();
             }
             catch (Exception e)
             {
@@ -58,4 +60,5 @@ public class Controller {
                 errorlabel.setVisible(true);
             }
     }
+
 }
