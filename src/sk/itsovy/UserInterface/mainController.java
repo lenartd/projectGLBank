@@ -21,6 +21,9 @@ public class mainController{
     public Label userlabel;
     public Button logoutb;
     public ComboBox clientdrp;
+    public Label fnameLabel;
+    public Label lnameLabel;
+    public Label mailLabel;
 
     Database dbase = Database.getInstanceDB();
 
@@ -37,6 +40,7 @@ public class mainController{
         Parent root;
         try
         {
+            Database.getInstanceDB().closeConnection();
             root = FXMLLoader.load(getClass().getResource("loginForm.fxml"));
             Stage stage = new Stage();
             stage.setTitle("GL Bank  Managagement");
@@ -60,7 +64,7 @@ public class mainController{
 
         for(int i=0; i<clientList.size(); i++)
         {
-            cblist.add(clientList.get(i).getFirstname() + " " + clientList.get(i).getLastname());
+            cblist.add(clientList.get(i).getFirstname() + " " + clientList.get(i).getLastname() + " (" + clientList.get(i).getId() + ")");
         }
         clientdrp.setItems(cblist);
     }
@@ -68,5 +72,37 @@ public class mainController{
     public void showClientData()
     {
         ArrayList <Client> clientList = dbase.getClients();
+
+    }
+
+    public void newClientWindow(ActionEvent actionEvent)
+    {
+        Parent root;
+        try
+        {
+            root = FXMLLoader.load(getClass().getResource("newClientForm.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("Create New Client");
+            stage.setScene(new Scene(root, 330, 265));
+            stage.setResizable(false);
+            stage.show();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void showClientInfo(ActionEvent actionEvent)
+    {
+        String selectedClient = clientdrp.getSelectionModel().getSelectedItem().toString();
+
+        int clientId = Integer.parseInt(selectedClient.substring(selectedClient.indexOf("(") + 1, selectedClient.indexOf(")")));
+
+        Client client = Database.getInstanceDB().getExactClient(clientId);
+
+        fnameLabel.setText("First name:   " + client.getFirstname());
+        lnameLabel.setText("Last name:   " + client.getLastname());
+        mailLabel.setText("Email:   " + client.getEmail());
     }
 }

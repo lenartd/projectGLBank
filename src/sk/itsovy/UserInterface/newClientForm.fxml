@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="265.0" prefWidth="331.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sk.itsovy.UserInterface.NewClientController">
+   <children>
+      <TextField fx:id="fnameBox" layoutX="119.0" layoutY="78.0" onMouseClicked="#deleteText" prefHeight="26.0" prefWidth="169.0" />
+      <TextField fx:id="lnameBox" layoutX="119.0" layoutY="120.0" onMouseClicked="#deleteText" prefHeight="26.0" prefWidth="170.0" />
+      <TextField fx:id="mailBox" layoutX="118.0" layoutY="160.0" onMouseClicked="#deleteText" prefHeight="26.0" prefWidth="170.0" />
+      <Label layoutX="36.0" layoutY="81.0" text="First name:">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="36.0" layoutY="123.0" text="Last name:">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="52.0" layoutY="164.0" text="E-mail:" />
+      <Button fx:id="addClientBtn" layoutX="36.0" layoutY="202.0" mnemonicParsing="false" onAction="#addClient" prefHeight="30.0" prefWidth="253.0" text="Add">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Label layoutX="71.0" layoutY="30.0" text="Create new client">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

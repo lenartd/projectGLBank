@@ -14,8 +14,7 @@ public class Database {
         return db;
     }
 
-    private int empoyeeId;
-    public int getEmpoyeeId() { return empoyeeId; }
+    private int employeeId;
 
     Connection conn = getConnection();
 
@@ -36,6 +35,22 @@ public class Database {
         return  null;
     }
 
+    public void closeConnection()
+    {
+        if(conn!=null)
+        {
+            try
+            {
+                conn.close();
+                System.out.println("Disconnected");
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public boolean matchUser(String username, String password)
     {
         try
@@ -49,7 +64,7 @@ public class Database {
                 String pass = rs.getString("password");
                 if(uname.equals(username) && pass.equals(password))
                 {
-                    empoyeeId = rs.getInt("ide");
+                    employeeId = rs.getInt("ide");
                     return true;
                 }
             }
@@ -67,6 +82,7 @@ public class Database {
         try
         {
             PreparedStatement st = conn.prepareStatement(new SqlQueries().getEmployeeInfo());
+            st.setInt(1, employeeId);
             ResultSet rs = st.executeQuery();
             rs.next();
 
@@ -90,7 +106,7 @@ public class Database {
     {
         try
         {
-            PreparedStatement st = conn.prepareStatement(new SqlQueries().getGetClients());
+            PreparedStatement st = conn.prepareStatement(new SqlQueries().getClients());
             ResultSet rs = st.executeQuery();
 
             ArrayList <Client> clientList = new ArrayList <>();
@@ -102,6 +118,48 @@ public class Database {
                 clientList.add(client);
             }
             return clientList;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean addClient(String fname, String lname, String email)
+    {
+        try
+        {
+            PreparedStatement st = conn.prepareStatement(new SqlQueries().getNewClient());
+            st.setString(1, fname);
+            st.setString(2, lname);
+            st.setString(3, email);
+            st.executeUpdate();
+            return true;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public Client getExactClient(int id)
+    {
+        try
+        {
+            PreparedStatement st = conn.prepareStatement(new SqlQueries().getExactClient());
+            st.setInt(1, id);
+            ResultSet rs = st.executeQuery();
+            rs.next();
+
+            String fname = rs.getString("fname");
+            String lname = rs.getString("lname");
+            String email = rs.getString("email");
+
+            Client client = new Client(fname, lname, email, id);
+
+            return client;
         }
         catch (Exception e)
         {

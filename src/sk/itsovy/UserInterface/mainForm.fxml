@@ -6,25 +6,48 @@
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="444.0" prefWidth="820.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sk.itsovy.UserInterface.mainController">
    <children>
       <Label fx:id="userlabel" layoutX="703.0" layoutY="20.0" prefHeight="18.0" prefWidth="0.0" />
       <Button fx:id="logoutb" layoutX="714.0" layoutY="16.0" mnemonicParsing="false" onAction="#logout" prefHeight="26.0" prefWidth="91.0" text="Logout" />
-      <ComboBox fx:id="clientdrp" layoutX="148.0" layoutY="54.0" prefWidth="150.0" />
-      <Button fx:id="newcbutton" layoutX="328.0" layoutY="53.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="100.0" text="New client" />
+      <ComboBox fx:id="clientdrp" layoutX="110.0" layoutY="54.0" onAction="#showClientInfo" prefHeight="26.0" prefWidth="188.0" />
+      <Button fx:id="newcbutton" layoutX="328.0" layoutY="53.0" mnemonicParsing="false" onAction="#newClientWindow" prefHeight="26.0" prefWidth="100.0" text="New client" />
       <TabPane layoutX="17.0" layoutY="104.0" prefHeight="323.0" prefWidth="786.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
-          <Tab text="Untitled Tab 1">
+          <Tab text="Client">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label fx:id="fnameLabel" layoutX="40.0" layoutY="46.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lnameLabel" layoutX="40.0" layoutY="79.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="mailLabel" layoutX="40.0" layoutY="115.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                     </children></AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Account">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
             </content>
           </Tab>
-          <Tab text="Untitled Tab 2">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-            </content>
-          </Tab>
+            <Tab text="Internet Banking">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              </content>
+            </Tab>
         </tabs>
       </TabPane>
    </children>
