@@ -1,8 +1,6 @@
 package sk.itsovy.Database;
 
-import sk.itsovy.Client;
-import sk.itsovy.Employee;
-import sk.itsovy.Globals;
+import sk.itsovy.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -160,6 +158,80 @@ public class Database {
             Client client = new Client(fname, lname, email, id);
 
             return client;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public ArrayList <Account> getAccountInfo(int id)
+    {
+        try
+        {
+            PreparedStatement st = conn.prepareStatement(new SqlQueries().getAccountInfo());
+            st.setInt(1, id);
+            ResultSet rs = st.executeQuery();
+
+            ArrayList <Account> accountList = new ArrayList <>();
+            Account account;
+
+            while(rs.next())
+            {
+                account = new Account(rs.getInt("idc"), rs.getString("accNum"), rs.getDouble("amount"), rs.getInt("id"));
+                accountList.add(account);
+            }
+            return accountList;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean insertAccount(int idc, String accnum)
+    {
+        try
+        {
+            PreparedStatement st = conn.prepareStatement(new SqlQueries().getInsertAccount());
+            st.setString(1, Integer.toString(idc));
+            st.setString(2, accnum);
+            st.setString(3, "0");
+            st.executeUpdate();
+            return true;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public ArrayList <Card> getCardInfo(int id)
+    {
+        try
+        {
+            PreparedStatement st = conn.prepareStatement(new SqlQueries().getCardInfo());
+            st.setInt(1, id);
+            ResultSet rs = st.executeQuery();
+
+            ArrayList <Card> cardList = new ArrayList <>();
+            Card card;
+
+            while(rs.next())
+            {
+                int idd = rs.getInt("id");
+                int ida = rs.getInt("ida");
+                String PIN = rs.getString("PIN");
+                int expireM = rs.getInt("expireM");
+                int expireY = rs.getInt("expireY");
+                boolean active =  rs.getBoolean("Active");
+                card = new Card(idd, ida, PIN, Integer.toString(expireM), Integer.toString(expireY), active);
+                cardList.add(card);
+            }
+            return cardList;
         }
         catch (Exception e)
         {

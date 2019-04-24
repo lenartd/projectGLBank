@@ -13,6 +13,12 @@ public class SqlQueries
 
     private String exactClient = "select * from client where id = ?";
 
+    private String accountInfo = "select * from account where idc = ?;";
+
+    private String insertAccount = "insert into account(idc, AccNum, amount) values(?, ?, ?);";
+
+    private String cardInfo = "select * from card inner join account on card.ida = account.id where account.accnum like ?";
+
     public String getEmployeeInfo() { return employeeInfo; }
 
     public String getLoginInfo() { return loginInfo; }
@@ -22,4 +28,10 @@ public class SqlQueries
     public String getNewClient() { return newClient; }
 
     public String getExactClient() { return exactClient; }
+
+    public String getAccountInfo() { return accountInfo; }
+
+    public String getInsertAccount() { return insertAccount; }
+
+    public String getCardInfo() { return cardInfo; }
 }

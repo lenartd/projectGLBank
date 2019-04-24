@@ -40,9 +40,58 @@
           </Tab>
           <Tab text="Account">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="23.0" layoutY="81.0" text="Account number:">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="currentBalance" layoutX="23.0" layoutY="136.0" text="Accunt balance:">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="accID" layoutX="23.0" layoutY="30.0" text="Account ID:">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <ComboBox fx:id="accountNum" layoutX="140.0" layoutY="78.0" onAction="#updateAccountInfo" prefHeight="26.0" prefWidth="170.0" promptText="Select account" />
+                        <Button fx:id="createNA" layoutX="673.0" layoutY="27.0" mnemonicParsing="false" onAction="#createNewAccount" text="New account" />
+                     </children></AnchorPane>
             </content>
           </Tab>
+            <Tab text="Card">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <ComboBox fx:id="accountNum2" layoutX="27.0" layoutY="28.0" prefWidth="170.0" promptText="Account" />
+                        <ComboBox fx:id="cardId" layoutX="230.0" layoutY="28.0" prefWidth="150.0" promptText="Card" />
+                        <Label fx:id="cardIDLabel" layoutX="33.0" layoutY="88.0" text="Card ID:">
+                           <font>
+                              <Font size="14.0" />
+                           </font></Label>
+                        <Label fx:id="pinLabel" layoutX="32.0" layoutY="126.0" text="PIN:">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="activeLabel" layoutX="32.0" layoutY="161.0" text="Active:">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="expireLabel" layoutX="31.0" layoutY="198.0" text="Expiration date:">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Button fx:id="newCard" layoutX="685.0" layoutY="28.0" mnemonicParsing="false" text="New card" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
             <Tab text="Internet Banking">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
@@ -50,5 +99,10 @@
             </Tab>
         </tabs>
       </TabPane>
+      <Label layoutX="31.0" layoutY="54.0" text="Clients:">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
