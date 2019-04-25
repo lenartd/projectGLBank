@@ -8,8 +8,9 @@ public class Card {
     private String expireM;
     private String expireY;
     private boolean active;
+    private String cardNumber;
 
-    public Card(int id, int ida, String PIN, String expireM, String expireY,  boolean active)
+    public Card(int id, int ida, String PIN, String expireM, String expireY,  boolean active, String cardNumber)
     {
         this.id = id;
         this.ida = ida;
@@ -17,6 +18,7 @@ public class Card {
         this.expireM = expireM;
         this.expireY = expireY;
         this.active = active;
+        this.cardNumber = cardNumber;
     }
 
     public int getId() { return id; }
@@ -30,4 +32,6 @@ public class Card {
     public String getExpireM() { return expireM; }
 
     public String getExpireY() { return expireY; }
+
+    public String getCardNumber() { return cardNumber; }
 }

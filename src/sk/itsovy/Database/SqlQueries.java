@@ -17,7 +17,7 @@ public class SqlQueries
 
     private String insertAccount = "insert into account(idc, AccNum, amount) values(?, ?, ?);";
 
-    private String cardInfo = "select * from card inner join account on card.ida = account.id where account.accnum like ?";
+    private String cardInfo = "select * from card inner join account on card.ida = account.id where account.idc like ?;";
 
     public String getEmployeeInfo() { return employeeInfo; }
 

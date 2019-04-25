@@ -53,6 +53,10 @@ public class Database {
     {
         try
         {
+            if (conn.isClosed())
+            {
+                conn = getConnection();
+            }
             PreparedStatement st = conn.prepareStatement(new SqlQueries().getLoginInfo());
             ResultSet rs = st.executeQuery();
 
@@ -228,7 +232,8 @@ public class Database {
                 int expireM = rs.getInt("expireM");
                 int expireY = rs.getInt("expireY");
                 boolean active =  rs.getBoolean("Active");
-                card = new Card(idd, ida, PIN, Integer.toString(expireM), Integer.toString(expireY), active);
+                String cardNum = rs.getString("CardNumber");
+                card = new Card(idd, ida, PIN, Integer.toString(expireM), Integer.toString(expireY), active, cardNum);
                 cardList.add(card);
             }
             return cardList;

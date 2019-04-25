@@ -37,6 +37,7 @@ public class mainController{
     public Label pinLabel;
     public Label activeLabel;
     public Label expireLabel;
+    public Label cardNumberLabel;
 
     Database dbase = Database.getInstanceDB();
 
@@ -112,7 +113,6 @@ public class mainController{
         accountNum2.getItems().clear();
         fillUpAccountDropdown(accountNum);
         fillUpAccountDropdown(accountNum2);
-        setDefaultCardInfo();
     }
 
     public int getCurrentClientId()
@@ -149,33 +149,6 @@ public class mainController{
                     {
                         comboId.getSelectionModel().selectFirst();
                     }
-            }
-    }
-
-    public void setDefaultCardInfo()
-    {
-        ArrayList <Card> card = dbase.getCardInfo(getCurrentClientId());
-
-        ObservableList<String> cardList = FXCollections.observableArrayList();
-
-        if(card.size() == 0 )
-        {
-            cardIDLabel.setText("Card ID:");
-            pinLabel.setText("PIN:");
-            activeLabel.setText("Active:");
-            expireLabel.setText("Expiration date:");
-        }
-        else
-            {
-                for(int i=0; i<card.size(); i++)
-                {
-                    cardList.add(Integer.toString(card.get(i).getId()));
-                }
-                cardId.setItems(cardList);
-                cardIDLabel.setText("Card ID:   " + card.get(0).getId());
-                pinLabel.setText("PIN:   " + card.get(0).getPIN());
-                activeLabel.setText("Active:   " + card.get(0).isActive());
-                expireLabel.setText("Expiration date:   " + card.get(0).getExpireM() + "/" + card.get(0).getExpireY());
             }
     }
 
@@ -225,5 +198,75 @@ public class mainController{
                 alert.setHeaderText("Failed to create account");
                 alert.showAndWait();
             }
+    }
+
+    public void updateAccCardInfo(ActionEvent actionEvent)
+    {
+        cardId.getItems().clear();
+        if(!accountNum2.getSelectionModel().isEmpty())
+        {
+            String selectedAccount = accountNum2.getSelectionModel().getSelectedItem().toString();
+
+            ArrayList <Card> card = dbase.getCardInfo(getCurrentClientId());
+
+            ArrayList <Account> account = dbase.getAccountInfo(getCurrentClientId());
+
+            ObservableList <String> cardList = FXCollections.observableArrayList();
+
+            for(int i=0; i<account.size(); i++)
+            {
+                for(int j=0; j<card.size(); j++)
+                {
+                    if(card.get(j).getIda() == account.get(i).getId() && account.get(i).getAccNum().equals(selectedAccount))
+                    {
+                        cardList.add(Integer.toString(card.get(j).getId()));
+                    }
+                }
+            }
+
+            cardId.setItems(cardList);
+            if(cardList.size() == 0)
+            {
+                cardIDLabel.setText("Card ID:");
+                cardNumberLabel.setText("Card number:");
+                pinLabel.setText("PIN:");
+                activeLabel.setText("Active:");
+                expireLabel.setText("Expiration date:");
+            }
+            else{cardId.getSelectionModel().selectFirst();}
+        }
+        else
+            {
+                cardIDLabel.setText("Card ID:");
+                cardNumberLabel.setText("Card number:");
+                pinLabel.setText("PIN:");
+                activeLabel.setText("Active:");
+                expireLabel.setText("Expiration date:");
+            }
+    }
+
+    public void updateCardValues(ActionEvent actionEvent)
+    {
+        if(!cardId.getSelectionModel().isEmpty())
+        {
+            ArrayList <Card> card = dbase.getCardInfo(getCurrentClientId());
+            int selectedCard = Integer.parseInt(cardId.getSelectionModel().getSelectedItem().toString());
+            for(int i =0 ; i<card.size(); i++)
+            {
+                if(card.get(i).getId() == selectedCard)
+                {
+                    cardIDLabel.setText("Card ID:   " + card.get(i).getId());
+                    cardNumberLabel.setText("Card number:   " + card.get(i).getCardNumber());
+                    pinLabel.setText("PIN:   " + card.get(i).getPIN());
+                    activeLabel.setText("Active:   " + card.get(i).isActive());
+                    expireLabel.setText("Expiration date:   " + card.get(i).getExpireM() + "/" + card.get(i).getExpireY());
+                    break;
+                }
+            }
+        }
+    }
+
+    public void createNewCard(ActionEvent actionEvent)
+    {
     }
 }
