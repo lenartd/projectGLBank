@@ -17,7 +17,10 @@ import sk.itsovy.Database.Database;
 import sk.itsovy.Employee;
 import sk.itsovy.Client;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
 
 
@@ -202,6 +205,11 @@ public class mainController{
 
     public void updateAccCardInfo(ActionEvent actionEvent)
     {
+        updateAccCardInfo();
+    }
+
+    public void updateAccCardInfo()
+    {
         cardId.getItems().clear();
         if(!accountNum2.getSelectionModel().isEmpty())
         {
@@ -236,13 +244,13 @@ public class mainController{
             else{cardId.getSelectionModel().selectFirst();}
         }
         else
-            {
-                cardIDLabel.setText("Card ID:");
-                cardNumberLabel.setText("Card number:");
-                pinLabel.setText("PIN:");
-                activeLabel.setText("Active:");
-                expireLabel.setText("Expiration date:");
-            }
+        {
+            cardIDLabel.setText("Card ID:");
+            cardNumberLabel.setText("Card number:");
+            pinLabel.setText("PIN:");
+            activeLabel.setText("Active:");
+            expireLabel.setText("Expiration date:");
+        }
     }
 
     public void updateCardValues(ActionEvent actionEvent)
@@ -268,5 +276,65 @@ public class mainController{
 
     public void createNewCard(ActionEvent actionEvent)
     {
+        int ida = 0;
+        String cardNumber = "";
+        String PIN = "";
+        int isActive = 1;
+        int expireM;
+        int expireY;
+
+        Random r = new Random();
+        int counter = 0;
+        for (int i = 0; i < 16; i++)
+        {
+            if(counter == 4)
+            {
+                cardNumber += " ";
+                counter = 0;
+            }
+            cardNumber += Integer.toString(r.nextInt(10));
+            counter++;
+        }
+
+        for (int i = 0; i < 4; i++)
+        {
+            PIN += Integer.toString(r.nextInt(10));
+        }
+
+        Date date = new Date();
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        expireM = localDate.getMonthValue();
+        expireY = localDate.getYear()+3;
+
+        String selectedAccount = accountNum2.getSelectionModel().getSelectedItem().toString();
+
+        ArrayList <Account> account = dbase.getAccountInfo(getCurrentClientId());
+
+        for(int i=0; i<account.size(); i++)
+        {
+            if(account.get(0).getAccNum().equals(selectedAccount))
+            {
+                ida = account.get(0).getId();
+                break;
+            }
+        }
+
+        if(dbase.insertNewCard(ida, PIN, expireM, expireY, isActive, cardNumber))
+        {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Card creation");
+            alert.setHeaderText("Card created successfully");
+            //alert.setContentText("Account number:  " + accNumber);
+            alert.showAndWait();
+        }
+        else
+            {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Card creation");
+                alert.setHeaderText("Failed to create card");
+                alert.showAndWait();
+            }
+        updateAccCardInfo();
     }
 }

@@ -19,6 +19,8 @@ public class SqlQueries
 
     private String cardInfo = "select * from card inner join account on card.ida = account.id where account.idc like ?;";
 
+    private String insertCard = "insert into card(ida, PIN, ExpireM, ExpireY, Active, CardNumber) values(?, ?, ?, ?, ?, ?);";
+
     public String getEmployeeInfo() { return employeeInfo; }
 
     public String getLoginInfo() { return loginInfo; }
@@ -34,4 +36,6 @@ public class SqlQueries
     public String getInsertAccount() { return insertAccount; }
 
     public String getCardInfo() { return cardInfo; }
+
+    public String getInsertCard() { return insertCard; }
 }

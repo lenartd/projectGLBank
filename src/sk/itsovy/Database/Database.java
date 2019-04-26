@@ -244,4 +244,25 @@ public class Database {
         }
         return null;
     }
+
+    public boolean insertNewCard(int ida, String PIN, int ExpireM, int ExpireY, int isActive, String cardNumber)
+    {
+        try
+        {
+            PreparedStatement st = conn.prepareStatement(new SqlQueries().getInsertCard());
+            st.setInt(1, ida);
+            st.setString(2, PIN);
+            st.setInt(3, ExpireM);
+            st.setInt(4, ExpireY);
+            st.setInt(5, isActive);
+            st.setString(6, cardNumber);
+            st.executeUpdate();
+            return true;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
