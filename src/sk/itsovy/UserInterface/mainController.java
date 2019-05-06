@@ -6,21 +6,20 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import sk.itsovy.Account;
-import sk.itsovy.Card;
+import sk.itsovy.*;
 import sk.itsovy.Database.Database;
-import sk.itsovy.Employee;
-import sk.itsovy.Client;
 
+import java.awt.*;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 
@@ -35,12 +34,19 @@ public class mainController{
     public Label accID;
     public Label currentBalance;
     public ComboBox accountNum2;
+    public ComboBox accountNum3;
     public ComboBox cardId;
     public Label cardIDLabel;
     public Label pinLabel;
     public Label activeLabel;
     public Label expireLabel;
     public Label cardNumberLabel;
+    public CheckBox blockCardBox;
+    public TextField amountW;
+    public TextField amountD;
+    public Label ibUname;
+    public CheckBox blockCheck;
+
 
     Database dbase = Database.getInstanceDB();
 
@@ -114,8 +120,15 @@ public class mainController{
 
         accountNum.getItems().clear();
         accountNum2.getItems().clear();
+        accountNum3.getItems().clear();
         fillUpAccountDropdown(accountNum);
         fillUpAccountDropdown(accountNum2);
+        fillUpAccountDropdown(accountNum3);
+
+        String uname = dbase.getLoginClientName(getCurrentClientId());
+        ibUname.setText("Username:   " + uname);
+
+        setIBBlock();
     }
 
     public int getCurrentClientId()
@@ -156,6 +169,11 @@ public class mainController{
     }
 
     public void updateAccountInfo(ActionEvent actionEvent)
+    {
+        updateAccInfo();
+    }
+
+    public void updateAccInfo()
     {
         if(!accountNum.getSelectionModel().isEmpty())
         {
@@ -255,6 +273,7 @@ public class mainController{
 
     public void updateCardValues(ActionEvent actionEvent)
     {
+        blockCardBox.setSelected(false);
         if(!cardId.getSelectionModel().isEmpty())
         {
             ArrayList <Card> card = dbase.getCardInfo(getCurrentClientId());
@@ -268,6 +287,11 @@ public class mainController{
                     pinLabel.setText("PIN:   " + card.get(i).getPIN());
                     activeLabel.setText("Active:   " + card.get(i).isActive());
                     expireLabel.setText("Expiration date:   " + card.get(i).getExpireM() + "/" + card.get(i).getExpireY());
+
+                    if(!card.get(i).isActive())
+                    {
+                        blockCardBox.setSelected(true);
+                    }
                     break;
                 }
             }
@@ -336,5 +360,193 @@ public class mainController{
                 alert.showAndWait();
             }
         updateAccCardInfo();
+    }
+
+    public void blockUnblockCard(ActionEvent actionEvent)
+    {
+        if(!cardId.getSelectionModel().isEmpty())
+        {
+            ArrayList <Card> card = dbase.getCardInfo(getCurrentClientId());
+            int selectedCard = Integer.parseInt(cardId.getSelectionModel().getSelectedItem().toString());
+            for(int i =0 ; i<card.size(); i++)
+            {
+                if(card.get(i).getId() == selectedCard)
+                {
+                    if(card.get(i).isActive())
+                    {
+                        dbase.setCardBlock(card.get(i).getId(), 0);
+                        activeLabel.setText("Active:   false");
+                    }
+                    else
+                        {
+                            dbase.setCardBlock(card.get(i).getId(), 1);
+                            activeLabel.setText("Active:   true");
+                        }
+                    break;
+                }
+            }
+        }
+    }
+
+    public void changeCardPin(ActionEvent actionEvent)
+    {
+        if(!cardId.getSelectionModel().isEmpty())
+        {
+            ArrayList <Card> card = dbase.getCardInfo(getCurrentClientId());
+            int selectedCard = Integer.parseInt(cardId.getSelectionModel().getSelectedItem().toString());
+            for(int i =0 ; i<card.size(); i++)
+            {
+                if(card.get(i).getId() == selectedCard)
+                {
+                    String newPIN = "";
+
+                    Random r = new Random();
+                    for (int j = 0; j < 4; j++)
+                    {
+                        newPIN += Integer.toString(r.nextInt(10));
+                    }
+
+                    dbase.changePIN(newPIN, card.get(0).getId());
+                    pinLabel.setText("PIN:   " + newPIN);
+                    break;
+                }
+            }
+        }
+    }
+
+    public void withdrawMoney(ActionEvent actionEvent)
+    {
+        double numberW = Double.parseDouble(amountW.getText());
+        String selectedAcc = accountNum3.getSelectionModel().getSelectedItem().toString();
+
+        ArrayList <Account> account = dbase.getAccountInfo(getCurrentClientId());
+
+        for(int i = 0; i<account.size(); i++)
+        {
+            if(account.get(i).getAccNum().equals(selectedAcc))
+            {
+                if((account.get(i).getAmount() - numberW) < 0)
+                {
+                    System.out.println("You don't have enough money.");
+                }
+                else
+                {
+                    System.out.println("There is enough money");
+                    if(dbase.getMoney(selectedAcc, numberW) && dbase.transactionLog(account.get(i).getId(), dbase.getEmployee().getId(), selectedAcc, numberW))
+                    {
+                        System.out.println("success");
+                        updateAccInfo();
+                    }
+                    else
+                        {
+                            System.out.println("somthing went wrong");
+                        }
+                }
+                break;
+            }
+        }
+    }
+
+    public void depositMoney(ActionEvent actionEvent)
+    {
+        double numberD = Double.parseDouble(amountD.getText());
+        String selectedAcc = accountNum3.getSelectionModel().getSelectedItem().toString();
+
+        ArrayList <Account> account = dbase.getAccountInfo(getCurrentClientId());
+
+        for(int i = 0; i<account.size(); i++)
+        {
+            if(account.get(i).getAccNum().equals(selectedAcc))
+            {
+                if(dbase.addMoney(selectedAcc, numberD) && dbase.transactionLog(account.get(i).getId(), dbase.getEmployee().getId(), selectedAcc, numberD))
+                {
+                    System.out.println("success");
+                    updateAccInfo();
+                }
+                else
+                {
+                    System.out.println("somthing went wrong");
+                }
+                break;
+            }
+        }
+    }
+
+    public String generatePass()
+    {
+        String alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        String pass = "";
+        Random random = new Random();
+        for(int i = 0; i<8; i++)
+        {
+            pass += alphabet.charAt(random.nextInt(62));
+        }
+        return pass;
+    }
+
+    public void resetIBPass(ActionEvent actionEvent)
+    {
+        if(dbase.resetIBPass(generatePass(), getCurrentClientId()))
+        {
+            System.out.println("Password reseted successfully");
+        }
+        else
+            {
+                System.out.println("Something went wrong");
+            }
+    }
+
+    public void blockClientIB(ActionEvent actionEvent)
+    {
+        if(!blockCheck.isSelected())
+        {
+            dbase.unblockClient(getCurrentClientId());
+            System.out.println("client unblocked");
+        }
+        else
+            {
+                dbase.blockClient(getCurrentClientId());
+                System.out.println("client blocked");
+            }
+    }
+
+    public void setIBBlock()
+    {
+        List <LoginHistory> records = dbase.getThreeLoginRecords(getCurrentClientId());
+        int blocks = 0;
+        for(int i =0; i<records.size(); i++)
+        {
+            if ( i == 0 && records.get(i).isSuccess() == null)
+            {
+                blockCheck.setSelected(true);
+            }
+            else if ( i == 0 && records.get(i).isSuccess().equals("1"))
+            {
+                blockCheck.setSelected(false);
+            }
+            else if (records.get(i).isSuccess() == null) {}
+            else if (records.get(i).isSuccess().equals("1")) {}
+            else {
+                    blocks++;
+                 }
+        }
+
+        if (blocks == 3)
+        {
+            blockCheck.setSelected(true);
+        }
+        else
+            {
+                blockCheck.setSelected(false);
+            }
+
+        if (dbase.isIBBlocked(getCurrentClientId()))
+        {
+            blockCheck.setSelected(false);
+        }
+        else
+            {
+                blockCheck.setSelected(true);
+            }
     }
 }

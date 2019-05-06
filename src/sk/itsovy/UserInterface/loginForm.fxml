@@ -11,7 +11,7 @@
 
 <AnchorPane prefHeight="330.0" prefWidth="380.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sk.itsovy.UserInterface.Controller">
    <children>
-      <TextField fx:id="usernameField" layoutX="167.0" layoutY="175.0" />
+      <TextField fx:id="usernameField" layoutX="167.0" layoutY="175.0" text="bossacc" />
       <Button layoutX="155.0" layoutY="269.0" mnemonicParsing="false" onAction="#verifyUser" prefHeight="26.0" prefWidth="69.0" text="Login" />
       <Label layoutX="85.0" layoutY="178.0" text="Username:">
          <font>
@@ -27,7 +27,7 @@
          <image>
             <Image url="@../../../bank.png" />
          </image></ImageView>
-      <PasswordField fx:id="passwordField" layoutX="167.0" layoutY="219.0" />
+      <PasswordField fx:id="passwordField" layoutX="167.0" layoutY="219.0" text="123" />
       <Label fx:id="errorlabel" layoutX="90.0" layoutY="143.0" text="Wrong username or password" textFill="RED" visible="false">
          <font>
             <Font size="15.0" />

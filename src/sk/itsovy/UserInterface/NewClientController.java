@@ -7,20 +7,38 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import sk.itsovy.Database.Database;
 
+import java.util.Random;
+
 public class NewClientController {
 
     public TextField fnameBox;
     public TextField lnameBox;
     public TextField mailBox;
 
+    Database db = Database.getInstanceDB();
     public void addClient(ActionEvent actionEvent)
     {
-        Database db = Database.getInstanceDB();
-        if(db.addClient(fnameBox.getText(), lnameBox.getText(), mailBox.getText()))
+        int idnew = db.addClient(fnameBox.getText(), lnameBox.getText(), mailBox.getText());
+        if(idnew >- 1)
         {
+            String alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+            String pass = "";
+            String username = fnameBox.getText();
+            Random random = new Random();
+            for(int i = 0; i<8; i++)
+            {
+                pass += alphabet.charAt(random.nextInt(62));
+            }
+            for(int i = 0; i<3; i++)
+            {
+                username += Integer.toString(random.nextInt(11));
+            }
+            db.newClientLogin(idnew, username, pass);
+
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Client creation");
             alert.setHeaderText("Client added successfully");
+            alert.setContentText("Username:  " + username + "\nPassword:   " + pass);
             alert.showAndWait();
         }
         else
@@ -41,6 +59,5 @@ public class NewClientController {
                 tfield.setText("");
             }
         }
-
     }
 }
