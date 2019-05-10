@@ -28,6 +28,22 @@ module.exports = {
              queryResult(JSON.stringify(result));
            }
       });
+    },
+
+    getLastThreeRecords(idc, queryResult)
+    {
+      const query = "select * from loginhistory where idl = (select id from loginclient where idc = " + idc + ")order by UNIX_TIMESTAMP(logDate) desc limit 3;";
+      con.query(query, (err, result) =>{
+        if (err)
+        {
+          console.log(err);
+          queryResult("Error");
+        }
+        else
+        {
+          queryResult(JSON.stringify(result));
+        }
+    });
     }
 
 };
