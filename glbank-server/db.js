@@ -30,6 +30,22 @@ module.exports = {
       });
     },
 
+    getLoginByUsername(username, queryResult)
+    {
+      const query = "select id from loginclient where login = \'" + username + "\';";
+      con.query(query, (err, result) =>{
+        if (err)
+        {
+          console.log(err);
+          queryResult("Error");
+        }
+        else
+        {
+          queryResult(JSON.stringify(result));
+        }
+      });
+    },
+
     getLastThreeRecords(idc, queryResult)
     {
       const query = "select * from loginhistory where idl = (select id from loginclient where idc = " + idc + ")order by UNIX_TIMESTAMP(logDate) desc limit 3;";
@@ -43,7 +59,22 @@ module.exports = {
         {
           queryResult(JSON.stringify(result));
         }
-    });
+      });
+    },
+
+    writeLoginAttempt(idl, success)
+    {
+      const query = "insert into loginhistory(idl, Success) VALUES (" + idl + ", " + success + ");";
+      con.query(query, err => {
+        if (err)
+        {
+          console.log(err);
+        }
+        else
+        {
+          console.log("Record successfully inserted");
+        }
+      });
     }
 
 };

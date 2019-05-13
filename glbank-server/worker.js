@@ -1,35 +1,9 @@
-let jwt = require('jsonwebtoken');
-const config = require('./config');
+const UIDGenerator = require('uid-generator');
 
-
-let checkToken = (req, result) => {
-    let token = req.headers['x-access-token'] || req.headers['authorization'];
-    if (token.startsWith('Bearer ')) 
-    {
-      token = token.slice(7, token.length);
-    }
-  
-    if (token) 
-    {
-      jwt.verify(token, config.secret, (err, decoded) => {
-            if (err) 
-            {
-                result(false);
-            } 
-            else
-            {
-                req.decoded = decoded;
-            }
-      });
-    } 
-    else 
-    {
-      result(false);
-    }
-  };  
-
+const tokengen = new UIDGenerator(512, UIDGenerator.BASE62);
 
 module.exports = {
+
     checkLoginHistory(history, result)
     {
         let isblocked = false;
@@ -53,5 +27,10 @@ module.exports = {
         else if(blocks < 3 && isblocked){isblocked = true;}
         else{isblocked = false;}
         result(isblocked);
+    },
+
+    generateToken(token)
+    {
+      tokengen.generate().then(uid => token(uid));
     }
 };
