@@ -75,6 +75,70 @@ module.exports = {
           console.log("Record successfully inserted");
         }
       });
-    }
+    },
 
+    getClientInfo(idc, queryResult)
+    {
+      const query = "select * from client where id = "+idc+";";
+      con.query(query, (err, result) =>{
+        if (err)
+        {
+          console.log(err);
+          queryResult("Error");
+        }
+        else
+        {
+          queryResult(JSON.stringify(result));
+        }
+      });
+    },
+
+    getAccounts(idc, queryResult)
+    {
+      const query = "select AccNum from account where idc = "+idc+";";
+      con.query(query, (err, result) =>{
+        if (err)
+        {
+          console.log(err);
+          queryResult("Error");
+        }
+        else
+        {
+          queryResult(JSON.stringify(result));
+        }
+      });
+    },
+
+    getAccountInfo(accNum, queryResult)
+    {
+      const query = "select id, amount from account where AccNum = \'"+accNum+"\';";
+      con.query(query, (err, result) =>{
+        if (err)
+        {
+          console.log(err);
+          queryResult("Error");
+        }
+        else
+        {
+          queryResult(JSON.stringify(result));
+        }
+      });
+    },
+/*
+    getTransHistory(idAcc, queryResult)
+    {
+      const query = "select id, amount from account where AccNum = \'"+accnum+"\';";
+      con.query(query, (err, result) =>{
+        if (err)
+        {
+          console.log(err);
+          queryResult("Error");
+        }
+        else
+        {
+          queryResult(JSON.stringify(result));
+        }
+      });
+    }
+*/
 };

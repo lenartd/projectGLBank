@@ -32,5 +32,19 @@ module.exports = {
     generateToken(token)
     {
       tokengen.generate().then(uid => token(uid));
+    },
+
+    verifyUserToken(userData, tokenArray, verified)
+    {
+        let state = -1;
+        for(let i = 0; i<tokenArray.length; i++)
+        {
+            if(tokenArray[i].name == userData.body.name && tokenArray[i].token == userData.body.token)
+            {
+                state = i;
+                break;
+            }
+        }
+        verified(state);
     }
 };

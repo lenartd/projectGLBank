@@ -18,11 +18,11 @@ app.post('/login', (req, res) => {
      queryResult1 = JSON.parse(queryResult1);
       if(queryResult1.length != 0 && queryResult1 != undefined && queryResult1 != null)
       {
-        database.getLoginData(req.body.name, req.body.password, queryResult =>{
-          queryResult = JSON.parse(queryResult);
-          if(queryResult.length != 0 && queryResult != undefined && queryResult != null)
+        database.getLoginData(req.body.name, req.body.password, queryResult2 =>{
+          queryResult2 = JSON.parse(queryResult2);
+          if(queryResult2.length != 0 && queryResult2 != undefined && queryResult2 != null)
           {
-            database.getLastThreeRecords(queryResult[0].idc, queryResult =>{
+            database.getLastThreeRecords(queryResult2[0].idc, queryResult =>{
               worker.checkLoginHistory(JSON.parse(queryResult), result =>{
                 if(result)
                 {
@@ -33,12 +33,13 @@ app.post('/login', (req, res) => {
                   worker.generateToken(token =>{
                     let obj=new Object();
                     obj.name=req.body.name;
+                    obj.idc=queryResult2[0].idc;
                     obj.token=token;
                     tokenArray.push(obj);
 
                     database.writeLoginAttempt(queryResult1[0].id, 1);
                     console.log("Client successfully logged in");
-                    return res.status(200).send(JSON.stringify(obj));
+                    return res.status(200).send(JSON.stringify({name:obj.name, token:obj.token}));
                   });
                 }
               });
@@ -59,17 +60,118 @@ app.post('/login', (req, res) => {
   });
 
   app.post('/logout', (req, res) => {
-    for(let i = 0; i<tokenArray.length; i++)
-    {
-      if(tokenArray[i].name == req.body.name && tokenArray[i].token == req.body.token)
+    worker.verifyUserToken(req, tokenArray, verified =>{
+      if(verified > -1)
       {
-        tokenArray.splice(i, 1);
-        return res.status(200).send();
+        tokenArray.splice(verified, 1);
         console.log("Client successfully logged out");
-        break;
+        return res.status(200).send();
       }
-    }
-    return res.status(401).send();
+      else
+      {
+        return res.status(401).send();
+      }
+    });
+  });
+
+  app.post('/userinfo', (req, res) => {
+    worker.verifyUserToken(req, tokenArray, verified =>{
+      console.log(verified);
+      if(verified > -1)
+      {
+        database.getClientInfo(tokenArray[verified].idc, queryResult =>{
+          if(queryResult != "Error" && queryResult.length != 0 && queryResult != undefined && queryResult != null)
+          {
+            queryResult = JSON.parse(queryResult);
+            let obj = new Object();
+            obj.ID = queryResult[0].id;
+            obj.FirstName = queryResult[0].fname;
+            obj.LastName = queryResult[0].lname;
+            obj.Mail = queryResult[0].email;
+
+            console.log("User info sent");
+            return res.status(200).send(JSON.stringify(obj));
+          }
+          else
+          {
+            return res.status(401).send();
+          }
+        });
+      }
+      else
+      {
+        return res.status(401).send();
+      }
+    });
+  });
+
+  app.post('/accounts', (req, res) => {
+    worker.verifyUserToken(req, tokenArray, verified =>{
+      if(verified > -1)
+      {
+        database.getAccounts(req.body.id, queryResult =>{
+          if(queryResult != "Error")
+          {
+            console.log("Accounts sent");
+            return res.status(200).send(queryResult);
+          }
+          else
+          {
+            return res.status(401).send();
+          }
+        });
+      }
+      else
+      {
+        return res.status(401).send();
+      }
+    });
+  });
+
+  app.post('/accinfo', (req, res) => {
+    worker.verifyUserToken(req, tokenArray, verified =>{
+      if(verified > -1)
+      {
+        database.getAccountInfo(req.body.accNum, queryResult =>{
+          if(queryResult != "Error")
+          {
+            console.log("Account info sent");
+            return res.status(200).send(queryResult);
+          }
+          else
+          {
+            return res.status(401).send();
+          }
+        });
+      }
+      else
+      {
+        return res.status(401).send();
+      }
+    });
+  });
+
+  app.post('/transhistory', (req, res) => {
+    worker.verifyUserToken(req, tokenArray, verified =>{
+      if(verified > -1)
+      {
+        database.getAccountInfo(req.body.accNum, queryResult =>{
+          if(queryResult != "Error")
+          {
+            console.log("Account info sent");
+            return res.status(200).send(queryResult);
+          }
+          else
+          {
+            return res.status(401).send();
+          }
+        });
+      }
+      else
+      {
+        return res.status(401).send();
+      }
+    });
   });
 
 app.listen(3125, () =>
