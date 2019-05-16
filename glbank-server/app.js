@@ -10,7 +10,7 @@ app.use(function(req, res, next) {
     next();
   });  
 
-
+let tokenArray = [];
 
 app.post('/login', (req, res) => {
 
@@ -31,8 +31,14 @@ app.post('/login', (req, res) => {
                 else
                 {
                   worker.generateToken(token =>{
+                    let obj=new Object();
+                    obj.name=req.body.name;
+                    obj.token=token;
+                    tokenArray.push(obj);
+
                     database.writeLoginAttempt(queryResult1[0].id, 1);
-                    return res.status(200).send(token);
+                    console.log("Client successfully logged in");
+                    return res.status(200).send(JSON.stringify(obj));
                   });
                 }
               });
@@ -50,6 +56,20 @@ app.post('/login', (req, res) => {
         return res.status(401).send();
       }
     });
+  });
+
+  app.post('/logout', (req, res) => {
+    for(let i = 0; i<tokenArray.length; i++)
+    {
+      if(tokenArray[i].name == req.body.name && tokenArray[i].token == req.body.token)
+      {
+        tokenArray.splice(i, 1);
+        return res.status(200).send();
+        console.log("Client successfully logged out");
+        break;
+      }
+    }
+    return res.status(401).send();
   });
 
 app.listen(3125, () =>
