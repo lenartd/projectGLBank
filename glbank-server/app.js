@@ -155,10 +155,79 @@ app.post('/login', (req, res) => {
     worker.verifyUserToken(req, tokenArray, verified =>{
       if(verified > -1)
       {
-        database.getAccountInfo(req.body.accNum, queryResult =>{
+        database.getTransHistory(req.body.idAcc, queryResult =>{
           if(queryResult != "Error")
           {
-            console.log("Account info sent");
+            console.log("Transaction history sent");
+            return res.status(200).send(queryResult);
+          }
+          else
+          {
+            return res.status(401).send();
+          }
+        });
+      }
+      else
+      {
+        return res.status(401).send();
+      }
+    });
+  });
+
+  app.post('/cards', (req, res) => {
+    worker.verifyUserToken(req, tokenArray, verified =>{
+      if(verified > -1)
+      {
+        database.getCards(req.body.idAcc, queryResult =>{
+          if(queryResult != "Error")
+          {
+            console.log("Cards sent");
+            return res.status(200).send(queryResult);
+          }
+          else
+          {
+            return res.status(401).send();
+          }
+        });
+      }
+      else
+      {
+        return res.status(401).send();
+      }
+    });
+  });
+
+  app.post('/cardinfo', (req, res) => {
+    worker.verifyUserToken(req, tokenArray, verified =>{
+      if(verified > -1)
+      {
+        database.getCardInfo(req.body.idCard, queryResult =>{
+          if(queryResult != "Error")
+          {
+            console.log("Card info sent");
+            return res.status(200).send(queryResult);
+          }
+          else
+          {
+            return res.status(401).send();
+          }
+        });
+      }
+      else
+      {
+        return res.status(401).send();
+      }
+    });
+  });
+
+  app.post('/cardtrans', (req, res) => {
+    worker.verifyUserToken(req, tokenArray, verified =>{
+      if(verified > -1)
+      {
+        database.getCardTrans(req.body.idCard, queryResult =>{
+          if(queryResult != "Error")
+          {
+            console.log("Card info sent");
             return res.status(200).send(queryResult);
           }
           else

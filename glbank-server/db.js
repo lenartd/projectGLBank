@@ -124,10 +124,58 @@ module.exports = {
         }
       });
     },
-/*
+
     getTransHistory(idAcc, queryResult)
     {
-      const query = "select id, amount from account where AccNum = \'"+accnum+"\';";
+      const query = "select TransAmount, idAcc from transaction where idAcc = "+idAcc+";";
+      con.query(query, (err, result) =>{
+        if (err)
+        {
+          console.log(err);
+          queryResult("Error");
+        }
+        else
+        {
+          queryResult(JSON.stringify(result));
+        }
+      });
+    },
+
+    getCards(idAcc, queryResult)
+    {
+      const query = "select id from card where ida = "+idAcc+";";
+      con.query(query, (err, result) =>{
+        if (err)
+        {
+          console.log(err);
+          queryResult("Error");
+        }
+        else
+        {
+          queryResult(JSON.stringify(result));
+        }
+      });
+    },
+
+    getCardInfo(idCard, queryResult)
+    {
+      const query = "select Active, ExpireM, ExpireY from card where id = "+idCard+";";
+      con.query(query, (err, result) =>{
+        if (err)
+        {
+          console.log(err);
+          queryResult("Error");
+        }
+        else
+        {
+          queryResult(JSON.stringify(result));
+        }
+      });
+    },
+
+    getCardTrans(idCard, queryResult)
+    {
+      const query = "select TransAmount, TransDate from cardtrans where idCard = "+idCard+";";
       con.query(query, (err, result) =>{
         if (err)
         {
@@ -140,5 +188,5 @@ module.exports = {
         }
       });
     }
-*/
+
 };
