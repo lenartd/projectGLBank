@@ -187,6 +187,22 @@ module.exports = {
           queryResult(JSON.stringify(result));
         }
       });
-    }
+    },
 
+    changePassword(id, newPassword, success)
+    {
+      const query = "UPDATE loginclient set password = MD5(\'" + newPassword + "\') where idc  = "+id+";";
+      con.query(query, err => {
+        if (err)
+        {
+          console.log(err);
+          success(false);
+        }
+        else
+        {
+          console.log("Record successfully inserted");
+          success(true);
+        }
+      });
+    }
 };

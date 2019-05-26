@@ -46,5 +46,19 @@ module.exports = {
             }
         }
         verified(state);
+    },
+
+    checkIfLoggedUser(uname, tokenArray, verified)
+    {
+        let state = -1;
+        for(let i = 0; i<tokenArray.length; i++)
+        {
+            if(tokenArray[i].name == uname)
+            {
+                state = i;
+                break;
+            }
+        }
+        verified(state);
     }
 };

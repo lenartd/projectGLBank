@@ -30,16 +30,46 @@ app.post('/login', (req, res) => {
                 }
                 else
                 {
-                  worker.generateToken(token =>{
-                    let obj=new Object();
-                    obj.name=req.body.name;
-                    obj.idc=queryResult2[0].idc;
-                    obj.token=token;
-                    tokenArray.push(obj);
-
-                    database.writeLoginAttempt(queryResult1[0].id, 1);
-                    console.log("Client successfully logged in");
-                    return res.status(200).send(JSON.stringify({name:obj.name, token:obj.token}));
+                  worker.checkIfLoggedUser(req.body.name, tokenArray, result=>{
+                    if(result > -1)
+                    {
+                      worker.verifyUserToken(req, tokenArray, verified =>{
+                        if(verified > -1)
+                        {
+                          tokenArray.splice(verified, 1);
+                          console.log("Client successfully logged out");
+                          worker.generateToken(token =>{
+                            let obj=new Object();
+                            obj.name=req.body.name;
+                            obj.idc=queryResult2[0].idc;
+                            obj.token=token;
+                            tokenArray.push(obj);
+        
+                            database.writeLoginAttempt(queryResult1[0].id, 1);
+                            console.log("Client successfully logged in");
+                            return res.status(200).send(JSON.stringify({name:obj.name, token:obj.token}));
+                          });
+                        }
+                        else
+                        {
+                          return res.status(401).send();
+                        }
+                      });
+                    }
+                    else
+                    {
+                      worker.generateToken(token =>{
+                        let obj=new Object();
+                        obj.name=req.body.name;
+                        obj.idc=queryResult2[0].idc;
+                        obj.token=token;
+                        tokenArray.push(obj);
+    
+                        database.writeLoginAttempt(queryResult1[0].id, 1);
+                        console.log("Client successfully logged in");
+                        return res.status(200).send(JSON.stringify({name:obj.name, token:obj.token}));
+                      });
+                    }
                   });
                 }
               });
@@ -242,6 +272,43 @@ app.post('/login', (req, res) => {
       }
     });
   });
+
+  app.post('/changepassword', (req, res) => {
+    worker.verifyUserToken(req, tokenArray, verified =>{
+      if(verified > -1)
+      {
+        database.getLoginData(req.body.name, req.body.oldPassword, queryResult2 =>{
+          queryResult2 = JSON.parse(queryResult2);
+          if(queryResult2.length != 0 && queryResult2 != undefined && queryResult2 != null && queryResult2 != "Error")
+          {
+            database.changePassword(req.body.id, req.body.newPassword, success =>{
+              console.log(success);
+              if(success)
+              {
+                worker.generateToken(tokenn =>{
+                  tokenArray[verified].token = tokenn;
+                  console.log("Password changed");
+                  return res.status(200).send(JSON.stringify({token:tokenn}));
+                });
+              }
+              else
+              {
+                return res.status(401).send();
+              }
+            });
+          }
+          else
+          {
+            return res.status(401).send();
+          }
+        });
+      }
+      else
+      {
+        return res.status(401).send();
+      }
+    });
+});
 
 app.listen(3125, () =>
   console.log('Server started on port 3125'),
