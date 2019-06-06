@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>GL bank Login Page</title>
+<meta charset="UTF-8"> 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<script src="script/jscript.js"></script>
+<link rel="stylesheet" href="css/logincss.css">
+</head>
+<body>
+<div id="upperDiv"></div>
+<form>
+<div id="loginBox">
+    <div id="imageHolder">
+            <div class="logo"></div>
+    </div>
+    <div id="textboxHolder">
+        <div class="group">
+            <input type="text" required="required" id="email"/><span class="highlight"></span><span class="bar"></span>
+            <label>Email</label>
+          </div>
+          <div class="group">
+            <input type="password" required="required" id="password"/><span class="highlight"></span><span class="bar"></span>
+            <label>Password</label>
+          </div>
+    </div>
+<div id="btn">
+        <button type="button" id="submit" class="btn1" onclick="login()">Login</button>
+</div>
+</div>
+</form>
+</body>
+</html> 
