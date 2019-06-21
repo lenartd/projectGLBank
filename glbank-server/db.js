@@ -1,5 +1,7 @@
 const mysql = require('mysql');
 
+let database = require("./db.js");
+
 const con = mysql.createConnection({
     host: "localhost",
     user: "root",
@@ -127,7 +129,7 @@ module.exports = {
 
     getTransHistory(idAcc, queryResult)
     {
-      const query = "select TransAmount, idAcc from transaction where idAcc = "+idAcc+";";
+      const query = "select TransAmount, idAcc, RecAccount, TransDate from transaction where idAcc = "+idAcc+";";
       con.query(query, (err, result) =>{
         if (err)
         {
@@ -204,5 +206,77 @@ module.exports = {
           success(true);
         }
       });
+    },
+
+    payment(senderAcc, recieverAcc, amount, success)
+    {
+      console.log(senderAcc);
+      GetAccountInfo(senderAcc, result =>{
+        if(result != "Error")
+        {
+          result = JSON.parse(result);
+          if(result[0].amount > amount)
+          {
+            execPaymentUpdate();
+          }
+          else
+          {
+            console.log("NOT ENOUGH MONEY");
+            success(false);
+          }
+        }
+        else
+        {
+          console.log("ERROR IN ACC INFO");
+          success(false);
+        }
+      });
+
+      function execPaymentUpdate()
+      {
+        console.log(senderAcc);
+        console.log("EXECUTING PAYMENT");
+
+        const query = "UPDATE account set amount = amount-"+amount+" where AccNum = \"" + senderAcc + "\";";
+        con.query(query, err => {
+          if (err)
+          {
+            console.log(err);
+            success(false);
+          }
+          else
+          {
+            const query = "UPDATE account set amount = amount+"+amount+" where AccNum = \"" + recieverAcc + "\";";
+            console.log(query);
+            con.query(query, err => {
+            if (err)
+            {
+              console.log(err);
+              success(false);
+            }
+            else
+            {
+              console.log("Payment successfully sent");
+              success(true);
+            }
+            });
+          }
+        });
+      }
+      function GetAccountInfo(accNum, queryResult)
+      {
+        const query = "select id, amount from account where AccNum = \'"+accNum+"\';";
+        con.query(query, (err, result) =>{
+          if (err)
+          {
+            console.log(err);
+            queryResult("Error");
+          }
+          else
+          {
+            queryResult(JSON.stringify(result));
+          }
+        });
+      }
     }
 };

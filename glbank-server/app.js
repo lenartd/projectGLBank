@@ -2,7 +2,9 @@ let database = require('./db');
 let worker = require('./worker');
 const app = require('express')();
 const bodyParser = require("body-parser");
+let cors = require("cors");
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -26,6 +28,7 @@ app.post('/login', (req, res) => {
               worker.checkLoginHistory(JSON.parse(queryResult), result =>{
                 if(result)
                 {
+                  console.log("LOGIN HISTORY WRONG");
                   return res.status(401).send();
                 }
                 else
@@ -52,6 +55,7 @@ app.post('/login', (req, res) => {
                         }
                         else
                         {
+                          console.log("CHECK IF USER LOGGED");
                           return res.status(401).send();
                         }
                       });
@@ -77,6 +81,7 @@ app.post('/login', (req, res) => {
           }
           else
           {
+            console.log("BAD LOGIN");
             database.writeLoginAttempt(queryResult1[0].id, 0);
             return res.status(401).send();
           }
@@ -84,6 +89,7 @@ app.post('/login', (req, res) => {
       }
       else
       {
+        console.log("NOT EXISTS IN DATABASE");
         return res.status(401).send();
       }
     });
@@ -308,6 +314,41 @@ app.post('/login', (req, res) => {
         return res.status(401).send();
       }
     });
+});
+
+app.post('/payment', (req, res) => {
+  worker.verifyUserToken(req, tokenArray, verified =>{
+    console.log(req.body.token);
+    if(verified > -1)
+    {
+      database.payment(req.body.senderAcc, req.body.recieverAcc, req.body.amount, success =>{
+        if(success)
+        {
+          database.getAccountInfo(req.body.senderAcc, result =>{
+            if(result != "Error")
+            {
+              return res.status(200).send(result);
+            }
+            else
+            {
+              console.log("GET ACCOUNT INFO APPJS");
+              return res.status(401).send();
+            }
+          });
+        }
+        else
+        {
+          console.log("USER NOT SUCCESS IN PAYMENT");
+          return res.status(401).send();
+        }
+      });
+    }
+    else
+    {
+      console.log("USER NOT VERIFIED");
+      return res.status(401).send();
+    }
+  });
 });
 
 app.listen(3125, () =>
