@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>GL bank Homepage</title>
+<meta charset="UTF-8"> 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<script src="script/jscript.js"></script>
+<link rel="stylesheet" href="css/homecss.css">
+</head>
+<body onload="accInfoOnLoad()">
+<ul id="menu">
+    <li><a href="home.html">Home</a></li>
+    <li><a href="accinfo.html">Account Information</a></li>
+    <li><a href="account.html">Accounts</a></li>
+    <li><a href="payment.html">Payment</a></li>
+    <li style="float:right"><a class="active" href="index.html" onclick="logout()">Logout</a></li>
+</ul>
+
+<div id="mainDiv">
+        <div id="accinfoDiv" class="innerDiv">
+                <p class="userFont" id="fname">First Name: </p>
+                <p class="userFont" id="lname">Last Name: </p>
+                <p class="userFont" id="mail">E-mail: </p>
+                <button id="changepwbutt" type="button" onclick="showpwchange()">Change Password</button>
+        </div>
+        <div id="pwchangeDiv" class="innerDiv" style="display:none;">
+                <table>
+                        <tr>
+                          <td class="userFont" id="currp">Current Password: </td>
+                          <td> <input type="password" id="cpw"> </td>
+                        </tr>
+                         <tr>
+                          <td class="userFont" id="newp">New Password:</td>
+                          <td> <input type="password" id="npw"> </td> 
+                        </tr>
+                 </table>
+                 <button id="changepw" type="button" onclick="changeUserPassword()">OK</button>
+        </div>
+</div>
+</body>
+</html> 

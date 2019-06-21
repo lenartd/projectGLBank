@@ -7,16 +7,40 @@
 <script src="script/jscript.js"></script>
 <link rel="stylesheet" href="css/homecss.css">
 </head>
-<body>
-    <ul>
-        <li><a href="#home">Home</a></li>
-        <li><a href="#news">Accounts</a></li>
-        <li style="float:right"><a class="active" href="#about">Logout</a></li>
-    </ul>
+<body onload="isLogged()">
+<ul id="menu">
+    <li><a href="home.html">Home</a></li>
+    <li><a href="accinfo.html">Account Information</a></li>
+    <li><a href="account.html">Accounts</a></li>
+    <li><a href="payment.html">Payment</a></li>
+    <li style="float:right"><a class="active" href="index.html" onclick="logout()">Logout</a></li>
+</ul>
 
-<div id="userDiv">
-    <p class="userFont">User Name</p>
-    <p class="userFont">Account Number</p>
+<div id="mainDiv">
+        <div id="userDiv" class="innerDiv">
+                <table>
+                        <tr>
+                          <td class="userFont" id="uname">User Name:</td>
+                        </tr>
+                        <tr>
+                          <td class="userFont" id="accnum">Account Number:</td>
+                          <td>
+                           <select id="accs" onchange="changeAccInfos()">
+                          </select> 
+                          </td>
+                        </tr>
+                </table>
+        </div>
+        <div id="balanceDiv" class="innerDiv">
+            <p class="userFont" id="userbal">Current Balance: </p>
+            <button id="paymentButt" type="button" onclick='toPayment()'>Payment</button>
+        </div>
+
+        <div class="innerDiv" id="transactionDiv1">
+                <p class="userFont" id="userbal">Transactions </p>
+        </div>
+
+        <div id="transactionDiv" class="innerDiv" style="overflow-x:hidden; overflow-y:scroll;"></div>
 </div>
 </body>
 </html> 

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>GL bank Homepage</title>
+<meta charset="UTF-8"> 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<script src="script/jscript.js"></script>
+<link rel="stylesheet" href="css/homecss.css">
+</head>
+<body onload="paymentOnLoad()">
+<ul id="menu">
+    <li><a href="home.html">Home</a></li>
+    <li><a href="accinfo.html">Account Information</a></li>
+    <li><a href="account.html">Accounts</a></li>
+    <li><a href="payment.html">Payment</a></li>
+    <li style="float:right"><a class="active" href="index.html" onclick="logout()">Logout</a></li>
+</ul>
+
+<div id="mainDiv" style="height:310px;">
+        <div id="paymentDivHead" class="innerDiv">
+                <table>
+                        <tr>
+                          <td class="userFont" id="uname2">User Name:</td>
+                        </tr>
+                        <tr>
+                          <td class="userFont" id="accnum">Account Number:</td>
+                          <td>
+                           <select id="accs2" onchange="changeAccInfos2()">
+                          </select> 
+                          </td>
+                        </tr>
+                </table>
+        </div>
+        <div id="paymentDiv" class="innerDiv">
+                <table>
+                        <tr>
+                          <td class="userFont" id="recAcc">Reciever Account: </td>
+                          <td><input type="text" id="recieverAcc"></td>
+                        </tr>
+                        <tr>
+                          <td class="userFont" id="paymentAm">Amount: </td>
+                          <td><input type="text" id="amountPay"></td>
+                        </tr>
+                </table>
+                <p class="userFont" id="cbalancePaym">Current Balance: </p>
+                <button id="cpaymentButton" type="button" onclick="payIt()">Confirm Payment</button>
+        </div>
+</div>
+</body>
+</html> 

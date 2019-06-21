@@ -1,24 +1,115 @@
-#userDiv
+#mainDiv
 {
-	position: absolute;
-	width: 511px;
-	height: 92px;
-	left: 65px;
-	top: 163px;
+	width:50%;
+	height:400px;
+
+	margin: auto;
+	width: 50%;
+	
+	padding-top: 20px;
 
 	background: #FAFAFA;
-	box-shadow: 0px 1.5px 4px rgba(0, 0, 0, 0.15);
+	box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
 }
 
+#menu
+{
+	margin-bottom: 60px;
+}
+
+#balanceDiv
+{
+	height:50px;
+	position: relative;
+}
+
+#userDiv
+{
+	height:80px;
+}
+
+#transactionDiv1
+{
+	height:40px;
+	margin-bottom: 1px;
+}
+
+#accs, #accs2
+{
+	margin-top:15px;
+}
+
+#transactionDiv
+{
+	height:150px;
+	margin-bottom: 20px;
+}
+
+#accountDiv
+{
+	height:160px;
+}
+
+#paymentButt, #changepwbutt
+{
+	position: absolute;
+	bottom: 0;
+	right: 0;
+}
+
+#accinfoDiv, #pwchangeDiv
+{
+	height:120px;
+}
+
+#pwchangeDiv, #cpw, #npw
+{
+	margin-top:15px;
+}
+
+#changepw, #cpaymentButton
+{
+	margin-top:15px;
+	margin-left: 130px;
+}
+
+#paymentDivHead
+{
+	height:80px;
+}
+
+#paymentDiv
+{
+	margin-top:15px;
+	height:185px;
+}
+
+#recieverAcc, #amountPay
+{
+	margin-top:15px;
+}
+
+.innerDiv
+{
+	margin: auto;
+	width: 50%;
+	background: #f2f2f2;
+	box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+
+	width:650px;
+	position: relative;
+}
 .userFont
 {
 	font-family: Roboto;
 	font-style: normal;
 	font-weight: normal;
-	font-size: 25px;
-	line-height: 29px;
+	font-size: 18px;
+	line-height: 5px;
+	padding-left: 15px;
+	padding-top: 15px;
 
-	color: #A6A6A6;
+	color: #666666;
 }
 
 
@@ -49,9 +140,11 @@ ul {
   }
   
   li a:hover:not(.active) {
-	background-color: #333333;
+	background-color: #de693e;
+	color: white;
   }
   
   .active {
-	background-color: #333333;
-  }
+	background-color: #202340;
+	}
+	
